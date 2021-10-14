@@ -23,3 +23,27 @@ Then /I should see all the movies/ do
     step %{I should see "#{movie.title}"}
   end
 end
+
+Then /^the director of "(.*)" should be "(.*)"$/ do |title_value, director_value|
+  movie = Movie.find_by_title(title_value)
+  expect(movie.director).to eq(director_value)
+end
+
+###########################################################
+
+Then /(.*) seed movies should exist/ do | n_seeds |
+  expect(Movie.count).to eq n_seeds.to_i
+end
+
+
+Then /I should (not )?see movies with titles: (.*)$/ do |display, movies_list|
+  movies = movies_list.split(', ')
+  movies.each do |movie|
+    if display.nil?
+      expect(page).to have_content(movie)
+    else
+      expect(page).not_to have_content(movie)
+    end
+  end
+end
+
